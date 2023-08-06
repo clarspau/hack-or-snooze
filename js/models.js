@@ -88,6 +88,31 @@ class StoryList {
 
     return story;
   }
+
+  /** Delete story from API and remove from the list.
+  */
+
+  async removeStory(user, storyId) {
+    const token = user.loginToken;
+    await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: { token: user.loginToken }
+    });
+
+    // filter out the story whose ID we are removing
+
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+
+    // filter out and remove from the user's stories list
+
+    user.ownStories = user.ownStories.filter(story => story.storyId !== storyId);
+
+    // filter out and remove from the user's favorites list
+
+    user.favorites = user.favorites.filter(story => story.storyId !== storyId);
+  }
+
 }
 
 
@@ -135,7 +160,7 @@ class User {
       data: { user: { username, password, name } },
     });
 
-    let { user } = response.data
+    let { user } = response.data;
 
     return new User(
       {
@@ -204,5 +229,37 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  // Add a story on user's favorites list and update the API
+
+  async addFavorite(story) {
+    this.favorites.push(story);
+    await this._addOrRemoveFavorite("add", story)
+  }
+
+  // Remove a story on the user's favorites list and update the API
+
+  async removeFavorite(story) {
+    this.favorites = this.favorites.filter(s => s.storyId !== story.storyId);
+    await this._addOrRemoveFavorite("remove", story);
+  }
+
+  // Update the API with favorite/non-favorite
+
+  async _addOrRemoveFavorite(newState, story) {
+    const method = newState === "add" ? "POST" : "DELETE";
+    const token = this.loginToken;
+    await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      method: method,
+      data: { token },
+    });
+  }
+
+  // Return true/false if given story is a user's favorite.
+
+  isFavorite(story) {
+    return this.favorites.some(s => (s.storyId === story.storyId));
   }
 }

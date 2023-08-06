@@ -112,12 +112,12 @@ async function updateUIOnUserLogin() {
 
   hidePageComponents();
 
-  $allStoriesList.show();
   putStoriesOnPage();
+  $allStoriesList.show();
 
   updateNavOnLogin();
   generateUserProfile();
-  $storiesContainer.show();
+  $storiesContainer.show()
 }
 
 function generateUserProfile() {
@@ -125,5 +125,5 @@ function generateUserProfile() {
 
   $("#profile-name").text(currentUser.name);
   $("#profile-username").text(currentUser.username);
-
+  $("#profile-account-date").text(currentUser.createdAt.slice(0, 10));
 }

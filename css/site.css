@@ -3,7 +3,7 @@
 body {
   font-family: Arimo, sans-serif;
   margin: 8px 7.5vw;
-  height: 100vh;
+  height: 10vh;
   background-image: radial-gradient(circle, #F2B5D0, #9DC0F3 100%);
 }
 
@@ -15,11 +15,6 @@ h1 {
 h4 {
   font-size: 1rem;
   margin: 0;
-}
-
-h5 {
-  font-size: 0.9rem;
-  font-weight: lighter;
 }
 
 a {
@@ -40,11 +35,12 @@ a:hover {
   flex-direction: column;
   align-self: center;
   background-color: #f6f6ef;
+
 }
 
-.stories-container{
-  overflow: scroll;
+.stories-container {
   height: calc(100vh - 100px);
+  overflow: scroll;
 }
 
 .hidden {
@@ -127,69 +123,4 @@ form > hr {
     max-width: 900px;
     margin: 8px auto;
   }
-}
-
-
-/* Individual stories */
-
-.star,
-.trash-can {
-  font-size: 0.75rem;
-  margin: 0 5px;
-  cursor: pointer;
-}
-
-.trash-can:hover {
-  color: crimson;
-}
-
-.story-link {
-  color: black;
-  font-size: 0.85rem;
-  font-weight: normal;
-  margin: 18px 0;
-}
-
-.story-link:hover {
-  text-decoration: none;
-}
-
-.story-author {
-  margin-left: 2em;
-  font-size: 0.85rem;
-  color: green;
-  padding: 6px 0;
-}
-
-.story-user {
-  display: block;
-  margin-left: 2em;
-  font-size: 0.85rem;
-  color: orange;
-}
-
-/* Lists of stories */
-
-.stories-list {
-  margin: 20px 5px;
-}
-
-.stories-list > li {
-  color: gray;
-  font-size: 0.8rem;
-  margin: 10px 0;
-  border-bottom: 1px solid #e5e5e5;
-  padding-bottom: 10px;
-}
-
-#favorited-stories,
-#my-stories {
-  list-style: none;
-  padding-left: 20px;
-}
-
-#stories-loading-msg {
-  font-weight: bold;
-  font-size: 150%;
-  margin: 20px 30px;
 }

@@ -21,17 +21,17 @@ async function getAndShowStoriesOnStart() {
 
 function generateStoryMarkup(story, showDeleteBtn = false) {
   // console.debug("generateStoryMarkup", story);
-
+  console.log(currentUser);
   const hostName = story.getHostName();
+
+  // show star if a user is logged in
   const showStar = Boolean(currentUser);
 
   return $(`
       <li id="${story.storyId}">
-
         <div>
         ${showDeleteBtn ? getDeleteBtnHTML() : ""}
         ${showStar ? getStarHTML(story, currentUser) : ""}
-
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -87,8 +87,9 @@ async function deleteStory(evt) {
 
   await storyList.removeStory(currentUser, storyId);
 
-  // refresh story list
-  putUserStoriesOnPage();
+  // re-generate story list
+
+  await putUserStoriesOnPage();
 }
 
 $ownStories.on("click", ".trash-can", deleteStory);
@@ -99,18 +100,20 @@ async function submitNewStory(evt) {
   console.debug("submitNewStory");
   evt.preventDefault();
 
-  const title = $("create-title").val();
+  // all info from form
+  const title = $("#create-title").val();
   const url = $("#create-url").val();
   const author = $("#create-author").val();
-  const username = currentUser.username;
+  const username = currentUser.username
   const storyData = { title, url, author, username };
 
   const story = await storyList.addStory(currentUser, storyData);
+
   const $story = generateStoryMarkup(story);
   $allStoriesList.prepend($story);
 
   // reset the form and hide
-  $submitForm.slideDown("slow");
+  $submitForm.slideUp("slow");
   $submitForm.trigger("reset");
 }
 
@@ -120,13 +123,14 @@ $submitForm.on("submit", submitNewStory);
 
 function putUserStoriesOnPage() {
   console.debug("putUserStoriesOnPage");
+
   $ownStories.empty();
 
-  if (currentUser.$ownStories.length === 0) {
-    $ownStories.append("<h3>No stories added yet!</h3>");
+  if (currentUser.ownStories.length === 0) {
+    $ownStories.append("<h4>No stories added by user yet!</h4>");
   } else {
     // loop through all of users stories and generate HTML for them
-    for (let story of currentUser.$ownStories) {
+    for (let story of currentUser.ownStories) {
       let $story = generateStoryMarkup(story, true);
       $ownStories.append($story);
     }
@@ -138,10 +142,11 @@ function putUserStoriesOnPage() {
 
 function putFavoritesListOnPage() {
   console.debug("putFavoritesListOnPage");
+
   $favoritedStories.empty();
 
   if (currentUser.favorites.length === 0) {
-    $favoritedStories.append("<h3>No favorite stories added!</h3>");
+    $favoritedStories.append("<h4>No favorite stories added!</h4>");
   } else {
     // loop through all of users favorite stories and generate HTML for them
     for (let story of currentUser.favorites) {
@@ -157,20 +162,20 @@ function putFavoritesListOnPage() {
 async function toggleStoryFavorite(evt) {
   console.debug("toggleStoryFavorite");
 
-  const $targetStory = $(evt.target);
-  const $closestLi = $targetStory.closest("li");
+  const $tgt = $(evt.target);
+  const $closestLi = $tgt.closest("li");
   const storyId = $closestLi.attr("id");
   const story = storyList.stories.find(s => s.storyId === storyId);
 
   // check if the item is already starred
-  if ($targetStory.hasClass("fas")) {
+  if ($tgt.hasClass("fas")) {
     // if starred: remove from favorites list and unstar
     await currentUser.removeFavorite(story);
-    $targetStory.closest("i").toggleClass("fas far");
+    $tgt.closest("i").toggleClass("fas far");
   } else {
     // if unstarred: add to favorites list and star
-    await currentUser.addFavorites(story);
-    $targetStory.closes("i").toggleClass("fas far");
+    await currentUser.addFavorite(story);
+    $tgt.closest("i").toggleClass("fas far");
   }
 }
 

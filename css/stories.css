@@ -8,14 +8,8 @@
   color: gray;
   font-size: 0.8rem;
   margin: 10px 0;
-  border-bottom: 1px solid #ECECEC;
-  padding-bottom: 10px;;
-}
-
-#stories-loading-msg {
-  font-weight: bold;
-  font-size: 150%;
-  margin: 20px 30px;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 10px;
 }
 
 #favorited-stories,
@@ -24,17 +18,24 @@
   padding-left: 20px;
 }
 
+#stories-loading-msg {
+  font-weight: bold;
+  font-size: 150%;
+  margin: 20px 30px;
+}
+
+
 /* Individual stories */
 
-.trash-can,
-.star {
+.star,
+.trash-can {
+  font-size: 0.75rem;
   margin: 0 5px;
   cursor: pointer;
-  font-size: 0.75rem;
 }
 
 .trash-can:hover {
-  color: red;
+  color: crimson;
 }
 
 .story-link {
